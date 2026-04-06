@@ -1,0 +1,28 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "周易占卜",
+        "navigationBarBackgroundColor": "#f9f3e6",
+        "navigationBarTextStyle": "black",
+        "disableScroll": true
+      }
+    },
+	{
+	      "path": "pages/privacy/privacy",
+	      "style": {
+	        "navigationBarTitleText": "隐私政策",
+	        "navigationBarBackgroundColor": "#f9f3e6",
+	        "navigationBarTextStyle": "black",
+	        "navigationStyle": "custom"
+	      }
+	    }
+  ],
+  "globalStyle": {
+    "backgroundColor": "#f9f3e6",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "iChing",
+    "navigationBarBackgroundColor": "#f9f3e6"
+  }
+}
