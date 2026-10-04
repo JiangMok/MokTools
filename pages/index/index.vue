@@ -1,46 +1,65 @@
 <template>
   <view class="main-container">
-    <!-- 内容区域：根据 currentTab 显示对应组件 -->
     <view v-show="currentTab === 'iching'" class="page-content">
-      <IChing ref="iching" />
+      <IChing ref="iching" :active="pageVisible && currentTab === 'iching'" />
+    </view>
+    <view v-show="currentTab === 'liuren'" class="page-content">
+      <LiuRen ref="liuren" />
+    </view>
+    <view v-show="currentTab === 'comprehensive'" class="page-content">
+      <Comprehensive ref="comprehensive" />
     </view>
     <view v-show="currentTab === 'picker'" class="page-content">
-      <Picker ref="picker" />
+      <Picker ref="picker" :active="pageVisible && currentTab === 'picker'" />
     </view>
-
-    <!-- 自定义底部 TabBar -->
-    <CustomTabBar :theme="currentTab === 'iching' ? 'iching' : 'picker'" @tabChange="handleTabChange" />
+    <CustomTabBar :theme="currentTab" @tabChange="handleTabChange" />
   </view>
 </template>
 
 <script>
 import IChing from '@/pages/components/IChing.vue'
+import LiuRen from '@/pages/components/LiuRen.vue'
+import Comprehensive from '@/pages/components/Comprehensive.vue'
 import Picker from '@/pages/components/Picker.vue'
 import CustomTabBar from '@/pages/components/CustomTabBar.vue'
 
 export default {
-  components: { IChing, Picker, CustomTabBar },
+  components: { IChing, LiuRen, Comprehensive, Picker, CustomTabBar },
   data() {
     return {
-      currentTab: 'iching' // 'iching' 或 'picker'
+      currentTab: 'picker',
+      pageVisible: false
     }
   },
   methods: {
     handleTabChange(tab) {
       this.currentTab = tab
-      // 切换时可以根据需要设置导航栏颜色和标题
       if (tab === 'iching') {
         uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#f9f3e6' })
         uni.setNavigationBarTitle({ title: '周易占卜' })
-      } else {
+      } else if (tab === 'liuren') {
+        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#e8f5e9' })
+        uni.setNavigationBarTitle({ title: '小六壬' })
+      } else if (tab === 'comprehensive') {
+        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#ede7f6' })
+        uni.setNavigationBarTitle({ title: '综合占卜' })
+      } else if (tab === 'picker') {
         uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#e6f2ff' })
         uni.setNavigationBarTitle({ title: '答案选择器' })
       }
     }
   },
   onLoad() {
-    // 初始化导航栏
     this.handleTabChange(this.currentTab)
+  },
+  onShow() {
+    this.pageVisible = true
+  },
+  onHide() {
+    this.pageVisible = false
+  },
+  onUnload() {
+    this.pageVisible = false
   }
 }
 </script>
@@ -50,10 +69,11 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f9f3e6; /* 默认背景，会被组件覆盖 */
+  background: #e6f2ff;
 }
 .page-content {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 </style>

@@ -1,7 +1,7 @@
 // 64卦名称表（行：上卦索引，列：下卦索引）
 const guaNames = [
 	["坤为地", "地山谦", "地水师", "地风升", "地雷复", "地火明夷", "地泽临", "地天泰"],
-	["山地剥", "艮为山", "山火贲", "山风蛊", "山雷颐", "山火贲", "山泽损", "山天大畜"],
+	["山地剥", "艮为山", "山水蒙", "山风蛊", "山雷颐", "山火贲", "山泽损", "山天大畜"],
 	["水地比", "水山蹇", "坎为水", "水风井", "水雷屯", "水火既济", "水泽节", "水天需"],
 	["风地观", "风山渐", "风水涣", "巽为风", "风雷益", "风火家人", "风泽中孚", "风天小畜"],
 	["雷地豫", "雷山小过", "雷水解", "雷风恒", "震为雷", "雷火丰", "雷泽归妹", "雷天大壮"],
@@ -9,9 +9,6 @@ const guaNames = [
 	["泽地萃", "泽山咸", "泽水困", "泽风大过", "泽雷随", "泽火革", "兑为泽", "泽天夬"],
 	["天地否", "天山遁", "天水讼", "天风姤", "天雷无妄", "天火同人", "天泽履", "乾为天"]
 ]
-guaNames[1][5] = "山火贲"
-guaNames[1][6] = "山泽损"
-guaNames[1][7] = "山天大畜"
 
 function throwCoins() {
 	let sum = 0
@@ -41,7 +38,6 @@ export function divine() {
 			yaos.push(0)
 			changes.push(false)
 		}
-		const index = i + 1
 	}
 
 	const lowerIdx = (yaos[0] << 2) | (yaos[1] << 1) | yaos[2]
@@ -82,37 +78,43 @@ export function divine() {
 }
 
 export function makePureLines(yaos) {
-	return yaos.map(y => y === 1 ? "——————" : "——  ——")
-	// return yaos.map(y => y === 1 ? "======" : "==  ==")
+	return yaos.map(y => y === 1 ? "===" : "= =")
 }
 
 export function getScoreLines(scores) {
 	return scores.map(s => s.toString())
 }
 
-export function makePrompt(benGua, bianGua, changeList) {
-	let prompt = "你是专业的易经大师和命理师，请你为我解释我刚占卜出来卦象："
-	if (!bianGua) {
-		prompt += `从“${benGua}”没有变卦，无需考虑变爻。`
-	} else {
-		prompt += `从“${benGua}”变卦成“${bianGua}”，`
-		if (changeList.length === 1) {
-			const c = changeList[0]
-			prompt += `其中变卦的爻辞是整个爻辞从下往上数第${c.position}爻辞都是${c.type}。`
-		} else {
-			prompt += `其中变卦的爻辞是整个爻辞从下往上数第`
-			changeList.forEach((c, idx) => {
-				if (idx > 0) prompt += "、"
-				prompt += c.position
-			})
-			prompt += `爻辞分别：`
-			changeList.forEach((c, idx) => {
-				if (idx > 0) prompt += "，"
-				prompt += `${c.position}爻${c.type}`
-			})
-			prompt += `。`
-		}
-	}
-	prompt += "请你解释这个卦象，并用大白话解释其中的专用名词,务必通俗易懂.不考虑其他各种因素,只解读卦象."
-	return prompt
+export function makePrompt(benGua, bianGua, changeList, type = 'truth', questionText = '') {
+  let prompt = "你是专业的易经大师和命理师，请你为我解释我刚占卜出来卦象："
+  if (!bianGua) {
+    prompt += `从“${benGua}”没有变卦，无需考虑变爻。`
+  } else {
+    prompt += `从“${benGua}”之卦成“${bianGua}”，`
+    if (changeList.length === 1) {
+      const c = changeList[0]
+      prompt += `其中变卦的爻辞是整个爻辞从下往上数第${c.position}爻辞都是${c.type}。`
+    } else {
+      prompt += `其中变卦的爻辞是整个爻辞从下往上数第`
+      changeList.forEach((c, idx) => {
+        if (idx > 0) prompt += "、"
+        prompt += c.position
+      })
+      prompt += `爻辞分别：`
+      changeList.forEach((c, idx) => {
+        if (idx > 0) prompt += "，"
+        prompt += `${c.position}爻${c.type}`
+      })
+      prompt += `。`
+    }
+  }
+  if (questionText) {
+    prompt += ` 问的是：${questionText}`
+  }
+  if (type === 'warm') {
+    prompt += "请你用温暖、鼓励的语气解释这个卦象，用大白话解释其中的专用名词，务必通俗易懂。不考虑其他各种因素，只解读卦象。"
+  } else {
+    prompt += "请你通过此卦象进行解读，不美化、不延伸、不虚构、不安慰、不升华。用大白话解释其中的专用名词，务必通俗易懂。不考虑其他各种因素，只解读卦象。"
+  }
+  return prompt
 }

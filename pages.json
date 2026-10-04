@@ -3,8 +3,9 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "周易占卜",
-        "navigationBarBackgroundColor": "#f9f3e6",
+        "navigationBarTitleText": "答案选择器",
+        "navigationBarBackgroundColor": "#e6f2ff",
+        "backgroundColor": "#e6f2ff",
         "navigationBarTextStyle": "black",
         "disableScroll": true
       }
@@ -14,8 +15,7 @@
 	      "style": {
 	        "navigationBarTitleText": "隐私政策",
 	        "navigationBarBackgroundColor": "#f9f3e6",
-	        "navigationBarTextStyle": "black",
-	        "navigationStyle": "custom"
+	        "navigationBarTextStyle": "black"
 	      }
 	    }
   ],

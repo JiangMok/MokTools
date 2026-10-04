@@ -8,11 +8,11 @@ export function doVibrateShort() {
 			type: 'light',
 			fail: () => {
 				// 如果失败，尝试降级
-				this.vibrateFallback()
+				vibrateFallback()
 			}
 		})
 	} else {
-		this.vibrateFallback()
+		vibrateFallback()
 	}
 }
 /**
@@ -25,11 +25,11 @@ export function doVibrateLong() {
 			type: 'medium',
 			fail: () => {
 				// 如果失败，尝试降级
-				this.vibrateFallback()
+				vibrateFallback()
 			}
 		})
 	} else {
-		this.vibrateFallback()
+		vibrateFallback()
 	}
 }
 /**
