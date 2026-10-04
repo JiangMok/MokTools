@@ -1,25 +1,26 @@
 <template>
   <view class="custom-tabbar" :style="{ backgroundColor: bgColor }">
     <view class="tabbar-item" @click="onClick('iching')">
-      <text class="tabbar-text" :style="{ color: current === 'iching' ? activeColor : inactiveColor }">🔮 占卜</text>
+      <text class="tabbar-text" :style="{ color: current === 'iching' ? activeColor : inactiveColor }">{{ tabConfig.iching.label }}</text>
     </view>
     <view class="divider" :style="{ backgroundColor: dividerColor }"></view>
     <view class="tabbar-item" @click="onClick('liuren')">
-      <text class="tabbar-text" :style="{ color: current === 'liuren' ? activeColor : inactiveColor }">📿 小六壬</text>
+      <text class="tabbar-text" :style="{ color: current === 'liuren' ? activeColor : inactiveColor }">{{ tabConfig.liuren.label }}</text>
     </view>
     <view class="divider" :style="{ backgroundColor: dividerColor }"></view>
     <view class="tabbar-item" @click="onClick('comprehensive')">
-      <text class="tabbar-text" :style="{ color: current === 'comprehensive' ? activeColor : inactiveColor }">🔯 综合</text>
+      <text class="tabbar-text" :style="{ color: current === 'comprehensive' ? activeColor : inactiveColor }">{{ tabConfig.comprehensive.label }}</text>
     </view>
     <view class="divider" :style="{ backgroundColor: dividerColor }"></view>
     <view class="tabbar-item" @click="onClick('picker')">
-      <text class="tabbar-text" :style="{ color: current === 'picker' ? activeColor : inactiveColor }">🎲 选择器</text>
+      <text class="tabbar-text" :style="{ color: current === 'picker' ? activeColor : inactiveColor }">{{ tabConfig.picker.label }}</text>
     </view>
   </view>
 </template>
 
 <script>
 import { doVibrateShort } from '@/utils/CommonUtils.js'
+import { TAB_CONFIG, getTabConfig } from '@/utils/tabConfig.js'
 
 export default {
   props: {
@@ -30,37 +31,25 @@ export default {
   },
   data() {
     return {
-      current: this.theme
+      current: this.theme,
+      tabConfig: TAB_CONFIG
     }
   },
   computed: {
+    currentTabConfig() {
+      return getTabConfig(this.current) || TAB_CONFIG.iching
+    },
     bgColor() {
-      if (this.current === 'iching') return '#f9f3e6'
-      if (this.current === 'liuren') return '#e8f5e9'
-      if (this.current === 'comprehensive') return '#ede7f6'
-      if (this.current === 'picker') return '#e6f2ff'
-      return '#f9f3e6'
+      return this.currentTabConfig.backgroundColor
     },
     activeColor() {
-      if (this.current === 'iching') return '#6b4c3b'
-      if (this.current === 'liuren') return '#2e7d32'
-      if (this.current === 'comprehensive') return '#5e35b1'
-      if (this.current === 'picker') return '#4a7db5'
-      return '#6b4c3b'
+      return this.currentTabConfig.activeColor
     },
     inactiveColor() {
-      if (this.current === 'iching') return '#b0a088'
-      if (this.current === 'liuren') return '#a5d6a7'
-      if (this.current === 'comprehensive') return '#b39ddb'
-      if (this.current === 'picker') return '#8db3d6'
-      return '#b0a088'
+      return this.currentTabConfig.inactiveColor
     },
     dividerColor() {
-      if (this.current === 'iching') return '#d9c8b6'
-      if (this.current === 'liuren') return '#c8e6c9'
-      if (this.current === 'comprehensive') return '#d1c4e9'
-      if (this.current === 'picker') return '#c2dcff'
-      return '#d9c8b6'
+      return this.currentTabConfig.dividerColor
     }
   },
   watch: {

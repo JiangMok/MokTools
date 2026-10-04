@@ -57,6 +57,14 @@ export default {
         showCancel: false
       })
       // #endif
+      // #ifdef H5
+      uni.showModal({
+        title: '提示',
+        content: '需要同意隐私政策才能使用本应用。如不同意，您可以关闭当前页面。',
+        showCancel: false,
+        confirmText: '知道了'
+      })
+      // #endif
     }
   }
 }

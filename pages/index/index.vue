@@ -22,6 +22,7 @@ import LiuRen from '@/pages/components/LiuRen.vue'
 import Comprehensive from '@/pages/components/Comprehensive.vue'
 import Picker from '@/pages/components/Picker.vue'
 import CustomTabBar from '@/pages/components/CustomTabBar.vue'
+import { getTabConfig } from '@/utils/tabConfig.js'
 
 export default {
   components: { IChing, LiuRen, Comprehensive, Picker, CustomTabBar },
@@ -34,19 +35,10 @@ export default {
   methods: {
     handleTabChange(tab) {
       this.currentTab = tab
-      if (tab === 'iching') {
-        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#f9f3e6' })
-        uni.setNavigationBarTitle({ title: '周易占卜' })
-      } else if (tab === 'liuren') {
-        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#e8f5e9' })
-        uni.setNavigationBarTitle({ title: '小六壬' })
-      } else if (tab === 'comprehensive') {
-        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#ede7f6' })
-        uni.setNavigationBarTitle({ title: '综合占卜' })
-      } else if (tab === 'picker') {
-        uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#e6f2ff' })
-        uni.setNavigationBarTitle({ title: '答案选择器' })
-      }
+      const config = getTabConfig(tab)
+      if (!config) return
+      uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: config.backgroundColor })
+      uni.setNavigationBarTitle({ title: config.title })
     }
   },
   onLoad() {

@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { divine, makePureLines, getScoreLines, makePrompt } from '@/utils/iching.js'
+import { divine, formatDivinationResult, makePrompt } from '@/utils/iching.js'
 import { doVibrateShort, doVibrateLong } from '@/utils/CommonUtils.js'
 
 export default {
@@ -119,7 +119,8 @@ export default {
       shakeEnabled: false,
       shakeThreshold: 40,
       accelerometerCallback: null,
-      question: ''
+      question: '',
+      resultQuestion: ''
     }
   },
   mounted() {
@@ -196,36 +197,14 @@ export default {
       }
       doVibrateLong()
 
-      const res = divine()
+      const res = formatDivinationResult(divine())
       this.benGua = res.benGua
       this.bianGua = res.bianGua
-      this.hasChange = res.bianGua !== null
-      this.changeList = res.changeList || []
-
-      const pureLines = makePureLines(res.yaos)
-      const scores = getScoreLines(res.scores)
-      const changes = res.changes
-
-      const reversedLines = [...pureLines].reverse()
-      const reversedScores = [...scores].reverse()
-      const reversedChanges = [...changes].reverse()
-
-      this.benDisplay = reversedLines.map((line, i) => ({
-        score: reversedScores[i],
-        line: line,
-        isChanging: reversedChanges[i]
-      }))
-
-      if (this.hasChange) {
-        const newYaos = [...res.yaos]
-        for (let i = 0; i < newYaos.length; i++) {
-          if (res.changes[i]) newYaos[i] = 1 - newYaos[i]
-        }
-        const bianPureLines = makePureLines(newYaos)
-        this.bianDisplay = bianPureLines.reverse()
-      } else {
-        this.bianDisplay = []
-      }
+      this.hasChange = res.hasChange
+      this.changeList = res.changeList
+      this.benDisplay = res.benDisplay
+      this.bianDisplay = res.bianDisplay
+      this.resultQuestion = this.question ? this.question.trim() : ''
 
       this.lastDivineTime = now
       return true
@@ -236,8 +215,7 @@ export default {
         uni.showToast({ title: '请先占卜', icon: 'none' })
         return
       }
-      const questionText = this.question && this.question.trim() ? this.question.trim() : ''
-      const finalPrompt = makePrompt(this.benGua, this.bianGua, this.changeList, type, questionText)
+      const finalPrompt = makePrompt(this.benGua, this.bianGua, this.changeList, type, this.resultQuestion)
       uni.setClipboardData({
         data: finalPrompt,
         success: () => uni.showToast({ title: '复制成功', icon: 'success' }),

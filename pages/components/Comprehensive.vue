@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { divine as ichingDivine, makePureLines, getScoreLines } from '@/utils/iching.js'
+import { divine as ichingDivine, formatDivinationResult } from '@/utils/iching.js'
 
 import { generateLiuren } from '@/utils/liuren.js'
 import { doVibrateShort } from '@/utils/CommonUtils.js'
@@ -94,6 +94,7 @@ export default {
   data() {
     return {
       question: '',
+      resultQuestion: '',
       liurenNumbers: [],
       liurenSteps: [],
       liurenFinal: '',
@@ -109,37 +110,8 @@ export default {
       this.liurenSteps = liuren.steps
       this.liurenFinal = liuren.final
 
-      const res = ichingDivine()
-      const benGua = res.benGua
-      const bianGua = res.bianGua
-      const hasChange = res.bianGua !== null
-      const changeList = res.changeList || []
-
-      const pureLines = makePureLines(res.yaos)
-      const scores = getScoreLines(res.scores)
-      const changes = res.changes
-
-      const reversedLines = [...pureLines].reverse()
-      const reversedScores = [...scores].reverse()
-      const reversedChanges = [...changes].reverse()
-
-      const benDisplay = reversedLines.map((line, i) => ({
-        score: reversedScores[i],
-        line: line,
-        isChanging: reversedChanges[i]
-      }))
-
-      let bianDisplay = []
-      if (hasChange) {
-        const newYaos = [...res.yaos]
-        for (let i = 0; i < newYaos.length; i++) {
-          if (res.changes[i]) newYaos[i] = 1 - newYaos[i]
-        }
-        const bianPureLines = makePureLines(newYaos)
-        bianDisplay = bianPureLines.reverse()
-      }
-
-      this.ichingResult = { benGua, bianGua, hasChange, changeList, benDisplay, bianDisplay }
+      this.ichingResult = formatDivinationResult(ichingDivine())
+      this.resultQuestion = this.question ? this.question.trim() : ''
     },
     copyResult() {
       if (!this.liurenSteps.length && !this.ichingResult) {
@@ -147,8 +119,8 @@ export default {
         return
       }
       let text = ''
-      if (this.question && this.question.trim()) {
-        text += `问：${this.question.trim()}\n\n`
+      if (this.resultQuestion) {
+        text += `问：${this.resultQuestion}\n\n`
       }
       if (this.liurenSteps.length) {
         text += `【小六壬】\n随机数：${this.liurenNumbers.join('、')}\n`

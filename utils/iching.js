@@ -85,6 +85,39 @@ export function getScoreLines(scores) {
 	return scores.map(s => s.toString())
 }
 
+export function formatDivinationResult(res) {
+	const benGua = res.benGua
+	const bianGua = res.bianGua
+	const hasChange = res.bianGua !== null
+	const changeList = res.changeList || []
+
+	const pureLines = makePureLines(res.yaos)
+	const scores = getScoreLines(res.scores)
+	const changes = res.changes
+
+	const reversedLines = [...pureLines].reverse()
+	const reversedScores = [...scores].reverse()
+	const reversedChanges = [...changes].reverse()
+
+	const benDisplay = reversedLines.map((line, i) => ({
+		score: reversedScores[i],
+		line: line,
+		isChanging: reversedChanges[i]
+	}))
+
+	let bianDisplay = []
+	if (hasChange) {
+		const newYaos = [...res.yaos]
+		for (let i = 0; i < newYaos.length; i++) {
+			if (res.changes[i]) newYaos[i] = 1 - newYaos[i]
+		}
+		const bianPureLines = makePureLines(newYaos)
+		bianDisplay = bianPureLines.reverse()
+	}
+
+	return { benGua, bianGua, hasChange, changeList, benDisplay, bianDisplay }
+}
+
 export function makePrompt(benGua, bianGua, changeList, type = 'truth', questionText = '') {
   let prompt = "你是专业的易经大师和命理师，请你为我解释我刚占卜出来卦象："
   if (!bianGua) {
